@@ -8,3 +8,8 @@ export interface Note {
   updatedAt: string;
   tag: string;
 }
+
+export interface NotehubResponse {
+  notes: Note[];
+  totalPages: number;
+}

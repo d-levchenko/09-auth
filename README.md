@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NoteHub
+
+NoteHub is a modern Next.js note management application built with
+authentication, private note access, search/filter capabilities, and server-side
+API integration.
+
+## Overview
+
+- Framework: **Next.js 16**
+- UI: **React 19**
+- Style: CSS modules
+- Data fetching: **Axios** + **React Query**
+- State: **Zustand**
+- Auth/session handling: **cookie** + Next.js route handlers
+- TypeScript support enabled
+
+## Key Features
+
+- User authentication and session handling via Next.js API routes
+- Protected note pages and authenticated access to private data
+- Note creation and detailed note view pages
+- Note listing with server-side pagination and filtering by tag
+- Search support for note content
+- Global layout with header, footer, and modal support
+- Reusable UI components for notes, pagination, search, and previews
+
+## Project Structure
+
+- `app/` - Next.js App Router pages and layouts
+  - `app/(auth routes)/` - authentication route structure
+  - `app/(private routes)/notes/` - protected note pages, filters, and detail
+    pages
+  - `app/api/` - route handlers for auth, notes, and session APIs
+- `components/` - reusable UI components like `Header`, `Footer`, `NoteForm`,
+  `NoteList`, and `Modal`
+- `hooks/` - custom hooks for note creation and modal state
+- `lib/api/` - API helpers for client and server requests
+- `types/` - shared TypeScript types for notes and users
 
 ## Getting Started
 
-First, run the development server:
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Run development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Open the application:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Visit `http://localhost:3000`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Available Scripts
 
-## Learn More
+- `npm run dev` - start the Next.js development server
+- `npm run build` - build the application for production
+- `npm run start` - run the production build
+- `npm run lint` - run ESLint checks
 
-To learn more about Next.js, take a look at the following resources:
+## Dependencies
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `next`
+- `react`
+- `react-dom`
+- `axios`
+- `@tanstack/react-query`
+- `zustand`
+- `react-paginate`
+- `cookie`
+- `use-debounce`
+- `modern-normalize`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Notes
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The app uses Next.js API route handlers and cookies to manage authentication
+  and session state.
+- The root layout includes a global `Header`, `Footer`, and React Query provider
+  via `TanStackProvider`.
+- Metadata is configured for SEO and social sharing across pages.

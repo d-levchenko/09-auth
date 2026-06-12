@@ -2,7 +2,7 @@ import { nextServer } from './api';
 import type { NotehubResponse, Note, TAGS } from '@/types/note';
 import type { User } from '@/types/user';
 
-interface RegisterRequest {
+export interface RegisterRequest {
   email: string;
   password: string;
   userName: string;
@@ -84,6 +84,7 @@ const getMe = async (): Promise<User> => {
 
   return data;
 };
+
 const updateMe = async (user: User): Promise<User> => {
   const { data } = await nextServer.patch<User>('/users/me', user);
 

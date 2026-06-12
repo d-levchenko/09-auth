@@ -1,6 +1,7 @@
 import type { User } from '@/types/user';
 import { nextServer } from './api';
 import type { Note, NotehubResponse, TAGS } from '@/types/note';
+import { cookies } from 'next/headers';
 
 interface Cookies {
   cookies: string;
@@ -46,14 +47,16 @@ const getMe = async ({ cookies }: Cookies): Promise<User> => {
   return data;
 };
 
-const checkSession = async ({ cookies }: Cookies): Promise<boolean> => {
-  const { data } = await nextServer.get<boolean>('/auth/session', {
+const checkSession = async () => {
+  const cookieStore = await cookies();
+
+  const res = await nextServer.get<boolean>('/auth/session', {
     headers: {
-      Cookie: cookies,
+      Cookie: cookieStore.toString(),
     },
   });
 
-  return data;
+  return res;
 };
 
 const serverNoteService = { fetchNotes, fetchNoteById, getMe, checkSession };

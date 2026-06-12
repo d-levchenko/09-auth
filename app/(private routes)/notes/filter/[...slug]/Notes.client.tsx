@@ -12,7 +12,7 @@ import Pagination from '@/components/Pagination/Pagination';
 
 import type { TAGS } from '@/types/note';
 
-import noteService from '@/lib/api';
+import clientNoteService from '@/lib/api/clientApi';
 
 type NotesClientProps = {
   tag: TAGS | undefined;
@@ -30,7 +30,7 @@ const NotesClient = ({ tag }: NotesClientProps) => {
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['notes', { search, page, perPage: PER_PAGE, tag }],
-    queryFn: () => noteService.fetchNotes(search, page, PER_PAGE, tag),
+    queryFn: () => clientNoteService.fetchNotes(search, page, PER_PAGE, tag),
     placeholderData: keepPreviousData,
   });
 

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import css from './Page.module.css';
+import css from './Profile.module.css';
 import Link from 'next/link';
 
 const ProfilePage = () => {

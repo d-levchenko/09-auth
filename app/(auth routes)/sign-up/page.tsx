@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { RegisterRequest } from '@/lib/api/clientApi';
 import clientNoteService from '@/lib/api/clientApi';
 
 import css from './SingUp.module.css';
@@ -12,53 +11,54 @@ const SignUp = () => {
   const [error, setError] = useState('');
 
   const handleSubmit = async (formData: FormData) => {
-    try {
-      const formValues = Object.fromEntries(
-        formData,
-      ) as unknown as RegisterRequest;
-      const res = await clientNoteService.register(formValues);
+    setError('');
 
-      if (res) {
-        router.push('/profile');
-      } else {
-        setError('Invalid email or password');
-      }
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    try {
+      await clientNoteService.register({ email, password });
+      router.push('/notes/filter/all');
     } catch {
-      setError('Invalid email or password');
+      setError('Registration failed. Please try again.');
     }
   };
 
   return (
     <main className={css.mainContent}>
-      <h1 className={css.formTitle}>Sign up</h1>
-      <form className={css.form} action={handleSubmit}>
-        <label className={css.formGroup}>
-          Username
+      <form action={handleSubmit} className={css.form}>
+        <h1 className={css.formTitle}>Sign up</h1>
+
+        <div className={css.formGroup}>
+          <label htmlFor="email">Email</label>
           <input
-            className={css.formInput}
-            type="text"
-            name="userName"
+            id="email"
+            type="email"
+            name="email"
+            className={css.input}
             required
           />
-        </label>
-        <label className={css.formGroup}>
-          Email
-          <input className={css.formInput} type="email" name="email" required />
-        </label>
-        <label className={css.formGroup}>
-          Password
+        </div>
+
+        <div className={css.formGroup}>
+          <label htmlFor="password">Password</label>
           <input
-            className={css.formInput}
+            id="password"
             type="password"
             name="password"
+            className={css.input}
             required
           />
-        </label>
-        <button className={css.submitButton} type="submit">
-          Register
-        </button>
+        </div>
+
+        <div className={css.actions}>
+          <button type="submit" className={css.submitButton}>
+            Register
+          </button>
+        </div>
+
+        <p className={css.error}>{error}</p>
       </form>
-      {error && <p className={css.error}>{error}</p>}
     </main>
   );
 };

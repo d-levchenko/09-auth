@@ -5,13 +5,16 @@ import type { User } from '@/types/user';
 export interface RegisterRequest {
   email: string;
   password: string;
-  userName: string;
 }
 
 interface CreateNoteProps {
   title: string;
   content: string;
   tag: string;
+}
+
+interface SessionResponse {
+  success: boolean;
 }
 
 const fetchNotes = async (
@@ -55,6 +58,7 @@ const deleteNote = async (noteId: Note['id']): Promise<Note> => {
 
 const register = async (data: RegisterRequest) => {
   const res = await nextServer.post<User>('/auth/register', data);
+
   return res.data;
 };
 
@@ -74,9 +78,9 @@ const logout = async (): Promise<User> => {
 };
 
 const checkSession = async (): Promise<boolean> => {
-  const { data } = await nextServer.get<boolean>('/auth/session');
+  const { data } = await nextServer.get<SessionResponse>('/auth/session');
 
-  return data;
+  return data.success;
 };
 
 const getMe = async (): Promise<User> => {

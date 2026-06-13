@@ -1,4 +1,4 @@
-import noteService from '@/lib/api';
+import clientNoteService from '@/lib/api/clientApi';
 import useNoteDraftStore from '@/lib/store/noteStore';
 
 import { QueryClient, useMutation } from '@tanstack/react-query';
@@ -8,7 +8,7 @@ const useCreateNote = (queryClient: QueryClient, router: AppRouterInstance) => {
   const { draft, setDraft, clearDraft } = useNoteDraftStore();
 
   const mutation = useMutation({
-    mutationFn: noteService.createNote,
+    mutationFn: clientNoteService.createNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
       clearDraft();

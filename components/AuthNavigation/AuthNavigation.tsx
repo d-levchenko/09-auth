@@ -10,6 +10,7 @@ import AuthLoginItem from '../AuthLoginItem/AuthLoginItem';
 const AuthNavigation = () => {
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
+
   const clearIsAuthenticated = useAuthStore(
     state => state.clearIsAuthenticated,
   );

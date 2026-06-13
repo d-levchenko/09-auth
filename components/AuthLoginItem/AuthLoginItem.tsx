@@ -1,5 +1,6 @@
-import css from '../AuthNavigation/AuthNavigation.module.css';
 import Link from 'next/link';
+
+import css from '../AuthNavigation/AuthNavigation.module.css';
 
 const AuthLoginItem = () => {
   return (

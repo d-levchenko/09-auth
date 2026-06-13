@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
+import useAuthStore from '@/lib/store/authStore';
 
 import clientNoteService from '@/lib/api/clientApi';
 
@@ -18,6 +19,9 @@ const SignInPage = () => {
     mutationFn: () => clientNoteService.login(email, password),
     onSuccess: () => {
       router.push('/notes/filter/all');
+      useAuthStore.setState({
+        isAuthenticated: true,
+      });
     },
     onError: () => {
       setError('Invalid email or password');

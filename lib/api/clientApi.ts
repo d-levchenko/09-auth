@@ -17,6 +17,11 @@ interface SessionResponse {
   success: boolean;
 }
 
+interface UpdateUserRequest {
+  username: string;
+  photoUrl?: string;
+}
+
 const fetchNotes = async (
   search: string,
   page: number,
@@ -89,7 +94,7 @@ const getMe = async (): Promise<User> => {
   return data;
 };
 
-const updateMe = async (user: User): Promise<User> => {
+const updateMe = async (user: UpdateUserRequest): Promise<User> => {
   const { data } = await nextServer.patch<User>('/users/me', user);
 
   return data;

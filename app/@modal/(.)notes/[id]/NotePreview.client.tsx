@@ -18,7 +18,7 @@ const NotePreviewClient = ({ id }: NotePreviewModalProps) => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ['notes', id],
+    queryKey: ['note', id],
     queryFn: () => clientNoteService.fetchNoteById(id),
     refetchOnMount: false,
   });

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import clientNoteService from '@/lib/api/clientApi';
+import useAuthStore from '@/lib/store/authStore';
 
 import css from './SingUp.module.css';
 
@@ -18,6 +19,10 @@ const SignUp = () => {
 
     try {
       await clientNoteService.register({ email, password });
+      useAuthStore.setState({
+        isAuthenticated: true,
+      });
+
       router.push('/notes/filter/all');
     } catch {
       setError('Registration failed. Please try again.');

@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-query';
 import { Metadata } from 'next';
 
-import clientNoteService from '@/lib/api/clientApi';
+import serverNoteService from '@/lib/api/serverApi';
 import NoteDetails from './NoteDetails.client';
 
 type NoteDetailsProps = {
@@ -17,7 +17,7 @@ export const generateMetadata = async ({
 }: NoteDetailsProps): Promise<Metadata> => {
   const { id } = await params;
 
-  const { title, content } = await clientNoteService.fetchNoteById(id);
+  const { title, content } = await serverNoteService.fetchNoteById(id);
 
   return {
     title: `Note ${title}`,
@@ -26,7 +26,7 @@ export const generateMetadata = async ({
     openGraph: {
       title: `Note ${title}`,
       description: `Note ${content} details`,
-      url: `https://notehub.app/notes/${id}`,
+      url: `https://09-auth-gamma-one.vercel.app/notes/${id}`,
       siteName: 'NoteHub',
 
       images: [
@@ -52,7 +52,7 @@ const NotePageDetails = async ({ params }: NoteDetailsProps) => {
 
   await queryClient.prefetchQuery({
     queryKey: ['notes', id],
-    queryFn: () => clientNoteService.fetchNoteById(id),
+    queryFn: () => serverNoteService.fetchNoteById(id),
   });
 
   return (

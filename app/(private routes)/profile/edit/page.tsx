@@ -5,16 +5,19 @@ import css from './EditProfilePage.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import clientNoteService from '@/lib/api/clientApi';
+import useAuthStore from '@/lib/store/authStore';
 
 const EditProfilePage = () => {
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [avatar, setAvatar] = useState('');
 
   useEffect(() => {
-    clientNoteService.getMe().then(({ username, email }) => {
+    clientNoteService.getMe().then(({ username, email, avatar }) => {
       setUserName(username ?? '');
       setUserEmail(email ?? '');
+      setAvatar(avatar ?? '');
     });
   }, []);
 
@@ -26,10 +29,20 @@ const EditProfilePage = () => {
     setUserName(e.target.value);
   };
 
-  const handleEditingProfile = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleEditingProfile = (formData: FormData) => {
+    const avatar = formData.get('avatar') as string;
+    const userName = formData.get('username') as string;
+    const userEmail = formData.get('email') as string;
 
     clientNoteService.updateMe({ username: userName }).then(() => {
+      useAuthStore.setState({
+        user: {
+          username: userName,
+          email: userEmail,
+          avatar: avatar,
+        },
+      });
+
       router.push('/profile');
     });
   };
@@ -40,14 +53,14 @@ const EditProfilePage = () => {
         <h1 className={css.formTitle}>Edit Profile</h1>
 
         <Image
-          src="https://ac.goit.global/fullstack/react/default-avatar.jpg"
+          src={avatar}
           alt="User Avatar"
           width={120}
           height={120}
           className={css.avatar}
         />
 
-        <form onSubmit={handleEditingProfile} className={css.profileInfo}>
+        <form action={handleEditingProfile} className={css.profileInfo}>
           <div className={css.usernameWrapper}>
             <label htmlFor="username">Username: {userName}</label>
             <input

@@ -17,10 +17,12 @@ const SignInPage = () => {
 
   const { mutate } = useMutation({
     mutationFn: () => clientNoteService.login(email, password),
-    onSuccess: () => {
-      router.push('/notes/filter/all');
+    onSuccess: user => {
+      router.push('/profile');
+
       useAuthStore.setState({
         isAuthenticated: true,
+        user: user,
       });
     },
     onError: () => {

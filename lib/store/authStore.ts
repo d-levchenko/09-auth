@@ -8,7 +8,7 @@ interface AuthStore {
   clearIsAuthenticated: () => void;
 }
 
-const useAuthStore = create<AuthStore>(set => ({
+const useAuthStore = create<AuthStore>()(set => ({
   isAuthenticated: false,
   user: null,
   setUser: (user: User) => {

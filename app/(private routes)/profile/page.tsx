@@ -1,7 +1,35 @@
 import Image from 'next/image';
-import css from './Profile.module.css';
 import Link from 'next/link';
 import serverNoteService from '@/lib/api/serverApi';
+import { Metadata } from 'next';
+
+import css from './Profile.module.css';
+
+export const metadata: Metadata = {
+  title: 'Profile Page',
+  description: 'Profile Page',
+
+  openGraph: {
+    title: 'Profile Page',
+    description: 'Profile Page',
+    url: 'https://09-auth-gamma-one.vercel.app/profile',
+    siteName: 'NoteHub',
+
+    images: [
+      {
+        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+        width: 1244,
+        height: 829,
+      },
+    ],
+  },
+
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Profile Page',
+    description: 'Profile Page',
+  },
+};
 
 const ProfilePage = async () => {
   const user = await serverNoteService.getMe();
@@ -17,7 +45,7 @@ const ProfilePage = async () => {
         </div>
         <div className={css.avatarWrapper}>
           <Image
-            src="https://ac.goit.global/fullstack/react/default-avatar.jpg"
+            src={user.avatar}
             alt="User Avatar"
             priority
             width={120}

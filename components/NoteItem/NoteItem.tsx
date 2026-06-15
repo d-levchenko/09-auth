@@ -27,7 +27,7 @@ const NoteItem = ({
           className={css.button}
           onClick={() => handleDelete(id)}
           disabled={mutation.isPending}>
-          Delete
+          {mutation.isPending ? 'Deleting...' : 'Delete'}
         </button>
       </div>
     </li>

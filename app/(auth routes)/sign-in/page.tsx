@@ -8,6 +8,7 @@ import useAuthStore from '@/lib/store/authStore';
 import clientNoteService from '@/lib/api/clientApi';
 
 import css from './SignIn.module.css';
+import toast from 'react-hot-toast';
 
 const SignInPage = () => {
   const router = useRouter();
@@ -15,22 +16,23 @@ const SignInPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { mutate } = useMutation({
+  const setUser = useAuthStore(state => state.setUser);
+
+  const { mutate, isPending } = useMutation({
     mutationFn: () => clientNoteService.login(email, password),
     onSuccess: user => {
-      router.push('/profile');
+      setUser(user);
+      toast.success('Signed in successfully');
 
-      useAuthStore.setState({
-        isAuthenticated: true,
-        user: user,
-      });
+      router.push('/profile');
     },
     onError: () => {
       setError('Invalid email or password');
+      toast.error('Invalid email or password');
     },
   });
 
-  const handleFormSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     mutate();
@@ -76,12 +78,15 @@ const SignInPage = () => {
         </div>
 
         <div className={css.actions}>
-          <button type="submit" className={css.submitButton}>
-            Log in
+          <button
+            type="submit"
+            className={css.submitButton}
+            disabled={isPending}>
+            {isPending ? 'Logging in...' : 'Log in'}
           </button>
         </div>
 
-        <p className={css.error}>{error}</p>
+        {error && <p className={css.error}>{error}</p>}
       </form>
     </main>
   );

@@ -6,12 +6,16 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import clientNoteService from '@/lib/api/clientApi';
 import useAuthStore from '@/lib/store/authStore';
+import toast from 'react-hot-toast';
 
 const EditProfilePage = () => {
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [avatar, setAvatar] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+
+  const setUser = useAuthStore(state => state.setUser);
 
   useEffect(() => {
     clientNoteService.getMe().then(({ username, email, avatar }) => {
@@ -29,22 +33,28 @@ const EditProfilePage = () => {
     setUserName(e.target.value);
   };
 
-  const handleEditingProfile = (formData: FormData) => {
-    const avatar = formData.get('avatar') as string;
+  const handleEditingProfile = async (formData: FormData) => {
     const userName = formData.get('username') as string;
-    const userEmail = formData.get('email') as string;
 
-    clientNoteService.updateMe({ username: userName }).then(() => {
-      useAuthStore.setState({
-        user: {
-          username: userName,
-          email: userEmail,
-          avatar: avatar,
-        },
+    try {
+      setIsSaving(true);
+
+      await clientNoteService.updateMe({
+        username: userName,
+      });
+
+      setUser({
+        username: userName,
+        email: userEmail,
+        avatar,
       });
 
       router.push('/profile');
-    });
+    } catch {
+      toast.error('Failed to update profile. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -67,6 +77,7 @@ const EditProfilePage = () => {
               onChange={handleUserNameChange}
               value={userName}
               id="username"
+              name="username"
               type="text"
               className={css.input}
             />
@@ -76,7 +87,7 @@ const EditProfilePage = () => {
 
           <div className={css.actions}>
             <button type="submit" className={css.saveButton}>
-              Save
+              {isSaving ? 'Saving...' : 'Save'}
             </button>
             <button
               onClick={handleCancel}

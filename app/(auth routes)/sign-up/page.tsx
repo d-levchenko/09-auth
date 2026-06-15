@@ -6,10 +6,14 @@ import clientNoteService from '@/lib/api/clientApi';
 import useAuthStore from '@/lib/store/authStore';
 
 import css from './SingUp.module.css';
+import toast from 'react-hot-toast';
 
 const SignUp = () => {
   const router = useRouter();
   const [error, setError] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false);
+
+  const setUser = useAuthStore(state => state.setUser);
 
   const handleSubmit = async (formData: FormData) => {
     setError('');
@@ -18,14 +22,21 @@ const SignUp = () => {
     const password = formData.get('password') as string;
 
     try {
-      await clientNoteService.register({ email, password });
-      useAuthStore.setState({
-        isAuthenticated: true,
+      setIsRegistering(true);
+
+      const user = await clientNoteService.register({
+        email,
+        password,
       });
 
-      router.push('/notes/filter/all');
+      setUser(user);
+
+      router.push('/profile');
     } catch {
       setError('Registration failed. Please try again.');
+      toast.error('Registration failed. Please try again.');
+    } finally {
+      setIsRegistering(false);
     }
   };
 
@@ -58,11 +69,11 @@ const SignUp = () => {
 
         <div className={css.actions}>
           <button type="submit" className={css.submitButton}>
-            Register
+            {isRegistering ? 'Registering...' : 'Register'}
           </button>
         </div>
 
-        <p className={css.error}>{error}</p>
+        {error && <p className={css.error}>{error}</p>}
       </form>
     </main>
   );

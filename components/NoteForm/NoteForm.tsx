@@ -67,7 +67,7 @@ const NoteForm = () => {
           Cancel
         </button>
         <button type="submit" className={css.submitButton} disabled={isPending}>
-          Create note
+          {isPending ? 'Creating...' : 'Create note'}
         </button>
       </div>
     </form>

@@ -29,7 +29,13 @@ const SignUp = () => {
         password,
       });
 
-      setUser(user);
+      setUser({
+        email: user.email,
+        username: user.username,
+        avatar:
+          user.avatar ??
+          'https://ac.goit.global/fullstack/react/default-avatar.jpg',
+      });
 
       router.push('/profile');
     } catch {

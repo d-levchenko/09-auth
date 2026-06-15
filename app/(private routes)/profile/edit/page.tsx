@@ -12,16 +12,20 @@ const EditProfilePage = () => {
   const router = useRouter();
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
-  const [avatar, setAvatar] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   const setUser = useAuthStore(state => state.setUser);
+  const user = useAuthStore(state => state.user);
+
+  const [avatar, setAvatar] = useState(
+    user?.avatar ?? 'https://ac.goit.global/fullstack/react/default-avatar.jpg',
+  );
 
   useEffect(() => {
     clientNoteService.getMe().then(({ username, email, avatar }) => {
       setUserName(username ?? '');
       setUserEmail(email ?? '');
-      setAvatar(avatar ?? '');
+      setAvatar(avatar);
     });
   }, []);
 
@@ -33,12 +37,16 @@ const EditProfilePage = () => {
     setUserName(e.target.value);
   };
 
-  const handleEditingProfile = async (formData: FormData) => {
+  const handleEditingProfile = async (
+    e: React.SubmitEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
     const userName = formData.get('username') as string;
+    setIsSaving(true);
 
     try {
-      setIsSaving(true);
-
       await clientNoteService.updateMe({
         username: userName,
       });
@@ -49,8 +57,11 @@ const EditProfilePage = () => {
         avatar,
       });
 
+      toast.success('Profile updated successfully.');
       router.push('/profile');
     } catch {
+      if (userName.length === 0) return toast.error('Username is required');
+
       toast.error('Failed to update profile. Please try again.');
     } finally {
       setIsSaving(false);
@@ -68,9 +79,10 @@ const EditProfilePage = () => {
           width={120}
           height={120}
           className={css.avatar}
+          loading="eager"
         />
 
-        <form action={handleEditingProfile} className={css.profileInfo}>
+        <form onSubmit={handleEditingProfile} className={css.profileInfo}>
           <div className={css.usernameWrapper}>
             <label htmlFor="username">Username: {userName}</label>
             <input
@@ -86,7 +98,10 @@ const EditProfilePage = () => {
           <p>Email: {userEmail}</p>
 
           <div className={css.actions}>
-            <button type="submit" className={css.saveButton}>
+            <button
+              type="submit"
+              className={css.saveButton}
+              disabled={isSaving}>
               {isSaving ? 'Saving...' : 'Save'}
             </button>
             <button

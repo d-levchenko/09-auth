@@ -14,6 +14,8 @@ const NoteItem = ({
   handleDelete,
   mutation,
 }: NoteItemProps) => {
+  const isDeleting = mutation.isPending && mutation.variables === id;
+
   return (
     <li key={id} className={css.listItem}>
       <h2 className={css.title}>{title}</h2>
@@ -27,7 +29,7 @@ const NoteItem = ({
           className={css.button}
           onClick={() => handleDelete(id)}
           disabled={mutation.isPending}>
-          {mutation.isPending ? 'Deleting...' : 'Delete'}
+          {isDeleting ? 'Deleting...' : 'Delete'}
         </button>
       </div>
     </li>
